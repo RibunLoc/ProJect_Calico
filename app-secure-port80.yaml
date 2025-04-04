@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-secure
+  labels: 
+    app: app-secure
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-secure
+  template:
+    metadata:
+      labels:
+        app: app-secure
+        role: trusted
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
