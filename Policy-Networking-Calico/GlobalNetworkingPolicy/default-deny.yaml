@@ -1,0 +1,11 @@
+# Đây là một ví dụ về chính sách mạng Calico để từ chối tất cả lưu lượng truy cập đến và đi từ các namespace không được chỉ định.
+# Nó sẽ từ chối tất cả lưu lượng truy cập đến và đi từ các namespace không được chỉ định trong trường hợp này là 'kube-system', 'calico-system', 'calico-apiserver'.
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  selector: projectcalico.org/namespace not in {'kube-system', 'calico-system', 'calico-apiserver'}
+  types:
+    - Ingress
+    - Egress
