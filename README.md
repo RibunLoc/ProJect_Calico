@@ -4,7 +4,7 @@
 
 # Project Calico
 
-![Calico](Calico_Ghibli.png "Calico Project")
+<img src="Calico_Ghibli.png" alt="Calico" width="500"/>
 
 
 ## Tổng quan
