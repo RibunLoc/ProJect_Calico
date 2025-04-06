@@ -1,0 +1,5 @@
+*.pem
+.pem
+*.log
+*.log.*
+app

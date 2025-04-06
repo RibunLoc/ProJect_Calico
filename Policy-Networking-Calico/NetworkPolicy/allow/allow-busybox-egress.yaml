@@ -3,9 +3,9 @@ apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: allow-busybox-egress
-  namespace: advanced-policy-demo
+  namespace: networking-policy-demo
 spec:
-  selector: run == 'access'
+  selector: app == 'attacker'
   types:
   - Egress
   egress:

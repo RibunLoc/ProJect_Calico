@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-secure
-  labels:
+  labels: 
     app: app-secure
-  namespace: advanced-policy-demo
+  namespace: networking-policy-demo
 spec:
   replicas: 2
   selector:
@@ -17,9 +17,6 @@ spec:
         role: trusted
     spec:
       containers:
-      - name: web-static
-        image: ribun/web-static:v1.0.0
-        ports:
-        - containerPort: 3000
-        
-        
+      - name: nginx
+        image: nginx
+ 

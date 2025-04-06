@@ -1,0 +1,17 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: deny-busybox-ingress
+  namespace: networking-policy-demo
+spec:
+  selector: app == 'app-secure'
+  types:
+  - Ingress
+  ingress:
+  - action: Deny
+    protocol: TCP
+    source: 
+      selector: app == 'attacker'
+    destination:
+      ports:
+      - 80
