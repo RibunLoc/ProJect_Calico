@@ -1,4 +1,4 @@
-# ProJect_Calico_NT531.P21
+# ProJect_Calico
 Đánh Giá Hiệu Năng Mạng Máy Tính 
 
 
@@ -83,6 +83,136 @@ Calico sử dụng mô hình định tuyến IP trực tiếp (pure IP networkin
 ```bash
 kubectl exec -it <pod-name> -- sh
 ```
+
+# Project Calico - Demo
+
+## 1. Mục Đích
+Trình bày một demo về bảo mật mạng trong Kubernetes sử dụng **Calico NetworkPolicy** kèm theo giám sát logs qua **OpenTelemetry Collector** và **Grafana Loki**.
+
+---
+
+## 2. Kiến trúc demo
+
+```
+trusted-client --> app-secure (nginx)
+attacker ------> app-secure (bị chặn)
+                         |
+OpenTelemetry Collector --> Loki --> Grafana
+```
+
+- 3 Node Minikube: control-plane + 2 workers
+- Namespace: `networking-policy-demo`
+
+---
+
+## 3. Cài đặt Calico
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml
+kubectl apply -f custom-resources.yaml
+```
+`custom-resources.yaml` bao gồm:
+- `Installation`: config VXLAN, IPPool CIDR
+- `APIServer`: bật Calico API server
+
+Hoặc
+
+```bash
+minikube start --nodes=3 --cni=calico
+```
+- Cài đặt minikube tại đường dẫn: [ Truy cập trang chính thức của minkube tại đây.](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download)
+
+
+---
+
+## 4. Tạo Pod Demo
+
+- `app-secure`: nginx, label: `app=app-secure`
+- `attacker`: busybox, label: `app=attacker`
+- `trusted-client`: busybox, label: `run=access`
+
+Triển khai bằng YAML Pod hoặc deployment.
+
+---
+
+## 5. Viết NetworkPolicy
+
+### 5.1 Chặn attacker truy cập app-secure
+- Dùng file `deny-busybox-ingress.yaml` để áp dụng chính sách
+```bash
+calicoctl apply -f deny-busybox-ingress.yaml
+```
+
+### 5.2 Cho trusted-client đi ra ngoài
+
+- Dùng file `allow-busybox-egress.yaml` để áp dụng chính sách
+```bash
+calicoctl apply -f allow-busybox-egress.yaml
+```
+
+---
+
+## 6. Cài OpenTelemetry Collector
+
+### ConfigMap: `otel-config.yaml`
+- Dùng file `otel-config.yaml` trong thư mục OpenTelemetry
+```bash
+kubectl apply -f otel-config.yaml
+```
+
+Triển khai cùng deployment otel-collector.
+- Dùng file `otel-collector-deployment.yaml` trong thư mục OpenTelemetry
+```bash
+kubectl apply -f otel-collector-deployment.yaml
+```
+
+
+---
+
+## 7. Cài Grafana + Loki
+- Để cài đặt Grafana + Loki trước hết bạn phải cài đặt helm tại đường dẫn này: link [Tải helm từ trang chính thức](https://helm.sh/docs/intro/install/)
+|| Sau đó cài đặt Grafana, Loki
+```bash
+helm repo add grafana https://grafana.github.io/helm-charts
+helm install loki grafana/loki-stack --namespace monitoring --create-namespace \
+  --set grafana.enabled=false --set promtail.enabled=true
+```
+
+- Đảm bảo Loki chạy: `kubectl get pods -n monitoring`
+- Port-forward Grafana: `kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80`
+
+---
+
+## 8. Truy vập Grafana
+
+1. Vào tab **Explore**
+2. Chọn Datasource: `Loki`
+3. Query:
+```logql
+{pod="attacker"} |= "timeout"
+```
+
+---
+
+## 9. Kiểm thử
+
+```bash
+kubectl exec -it attacker -n networking-policy-demo -- wget http://app-secure:80
+```
+
+➡️ Log bị timeout xuất hiện trong Grafana.
+
+---
+
+## 10. Kết luận
+
+- Calico chặn truy cập xác định theo label và port
+- OpenTelemetry thu log từ Pod
+- Loki lưu trữ, Grafana hiển thị log theo pod / namespace
+
+✅ Demo bào mật mạng & quan sát log đã hoàn tất
+
+
 
 ## Kết luận
 
