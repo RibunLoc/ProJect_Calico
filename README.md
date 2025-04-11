@@ -184,6 +184,24 @@ helm install loki grafana/loki-stack --namespace monitoring --create-namespace \
 ---
 
 ## 8. Truy vập Grafana
+✅ Cách lấy mật khẩu Grafana
+
+📌 Bước 1: Lấy chuỗi mã hoá base64 từ Secret
+`kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}"`=> Kết quả sẽ trả ra một chuỗi dài
+
+📌 Bước 2: Giải mã base64 
+
+`[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("<chuỗi bạn nhận được>"))`
+
+🎯Gộp lại
+```bash
+$pwd = kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}"
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($pwd))
+
+```
+
+- Lấy mật khẩu mặc định `kubectl get secret monitoring-grafana -n monitoring`, bạn sẽ nhận được đoạn mã và hãy copy lại và sử dụng trình giải mã base64. 
+
 
 1. Vào tab **Explore**
 2. Chọn Datasource: `Loki`
@@ -191,6 +209,8 @@ helm install loki grafana/loki-stack --namespace monitoring --create-namespace \
 ```logql
 {pod="attacker"} |= "timeout"
 ```
+
+
 
 ---
 
