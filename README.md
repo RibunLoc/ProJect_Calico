@@ -180,7 +180,7 @@ helm install loki grafana/loki-stack --namespace monitoring --create-namespace \
 
 - Đảm bảo Loki chạy: `kubectl get pods -n monitoring`
 - Port-forward Grafana: `kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80`
-
+- Khi sử dụng lệnh kubectl get pod -n monitoring gặp phải pod grafana bị crashLoopback, sử dụng lệnh sau để khởi chạy lại pod đó `kubectl delete pod -n monitoring -l app.kubernetes.io/name=grafana`
 ---
 
 ## 8. Truy vập Grafana
