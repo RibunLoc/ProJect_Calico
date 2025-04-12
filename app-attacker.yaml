@@ -4,7 +4,7 @@ metadata:
   name: app-attacker
   labels:
     app: attacker
-  namespace: networking-policy-demo
+  namespace: production
 spec:
   containers:
   - name: attacker
