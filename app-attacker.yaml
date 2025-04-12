@@ -2,11 +2,20 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: app-attacker
+  namespace: production
   labels:
     app: attacker
-  namespace: production
 spec:
+  nodeSelector:
+    node: Node3
   containers:
   - name: attacker
-    image: busybox
-    command: ['sleep', '3600']
+    image: nicolaka/netshoot
+    command: ["/bin/sh", "-c"]
+    args:
+      - |
+        while true; do
+          echo "🚨 Simulating curl attack to app-secure $(date)" >&2;
+          curl -s http://app-secure.production.svc.cluster.local >/dev/null;
+          sleep 5;
+        done

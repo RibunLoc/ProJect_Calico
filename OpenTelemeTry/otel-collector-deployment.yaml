@@ -22,7 +22,14 @@ spec:
         volumeMounts:
         - name: otel-config-vol
           mountPath: /etc/otel
+        - name: pod-logs
+          mountPath: /var/log/containers
+          readOnly: true
       volumes:
       - name: otel-config-vol
         configMap:
           name: otel-config
+      - name: pod-logs
+        hostPath:
+          path: /var/log/containers
+          type: DirectoryOrCreate
