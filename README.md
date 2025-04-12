@@ -4,7 +4,7 @@
 
 # Project Calico
 
-<img src="Calico_Ghibli.png" alt="Calico" width="250"/>
+<img src="Calico_Ghibli.png" alt="Calico" width="325"/>
 
 
 ## Tổng quan
@@ -267,7 +267,7 @@ Bạn sẽ có 3 thành phần:
 ---
 
 
-# 🗂️ **Bước 1: Chuẩn bị môi trường**
+## 🗂️ **Bước 1: Chuẩn bị môi trường**
 
 Bạn cần có một namespace `production`:
 
@@ -285,7 +285,7 @@ kubectl apply -n production -f postgres-db.yaml
 
 ---
 
-# 🛡️ **Bước 2: Áp dụng NetworkPolicy**
+## 🛡️ **Bước 2: Áp dụng NetworkPolicy**
 
 ### ① **Default Deny** *(khóa toàn bộ namespace trước)*
 
@@ -350,7 +350,7 @@ calicoctl create -f allow-trusted-to-db.yaml
 
 ---
 
-# 🚀 **Bước 3: Triển khai pod attacker**
+## 🚀 **Bước 3: Triển khai pod attacker**
 
 Tạo file `app-attacker.yaml`:
 
@@ -377,7 +377,7 @@ kubectl apply -f app-attacker.yaml
 
 ---
 
-# 🕵️ **Bước 4: Mô phỏng cuộc tấn công từ pod attacker**
+## 🕵️ **Bước 4: Mô phỏng cuộc tấn công từ pod attacker**
 
 ### **① Vào trong pod attacker**:
 
@@ -415,7 +415,7 @@ telnet: can't connect to remote host (10.96.x.x): Connection refused
 
 ---
 
-# ✅ **Bước 5: Mô phỏng truy cập hợp lệ (trusted)**
+## ✅ **Bước 5: Mô phỏng truy cập hợp lệ (trusted)**
 
 Tạo nhanh một pod trusted để kiểm thử hợp lệ:
 
@@ -435,7 +435,7 @@ Password for user demo:
 
 ---
 
-# 📊 **Bước 6: Giám sát và log (Observability)**
+## 📊 **Bước 6: Giám sát và log (Observability)**
 
 - Bạn đã cài OpenTelemetry Collector + Loki/Grafana trước đó.
 
