@@ -4,7 +4,7 @@
 
 # Project Calico
 
-<img src="Calico_Ghibli.png" alt="Calico" width="500"/>
+<img src="Calico_Ghibli.png" alt="Calico" width="250"/>
 
 
 ## Tổng quan
@@ -237,7 +237,7 @@ kubectl exec -it attacker -n networking-policy-demo -- wget http://app-secure:80
 ---
 ---
 
-# 📌 **Kịch bản số 2**
+# 📌 **Kịch bản số 1**
 Dưới đây là **kịch bản chi tiết và đầy đủ nhất** cho việc mô phỏng một **"cuộc tấn công vào Pod Database"** trong Kubernetes, sử dụng Project Calico để bảo vệ và kiểm soát truy cập. Mình sẽ giải thích từng bước rõ ràng để bạn hiểu cặn kẽ và thực hiện một cách dễ dàng nhất.
 
 **Mục tiêu kịch bản:**
@@ -460,37 +460,77 @@ app-attacker | nc: connection timed out
 
 # 📌 **Tóm tắt toàn bộ kịch bản (slide)**
 
-1. Chuẩn bị môi trường & Pod database.
-2. Áp dụng chính sách mạng Calico:
+#### 1. Chuẩn bị môi trường & Pod database.
+#### 2. Áp dụng chính sách mạng Calico:
    - **Default deny** (chặn toàn bộ).
    - **Cho phép trusted vào DB**.
-3. Pod attacker cố tấn công vào DB (thất bại).
-4. Pod trusted truy cập DB (thành công).
-5. Xác nhận log trong Grafana thể hiện rõ traffic bị chặn.
+#### 3. Pod attacker cố tấn công vào DB (thất bại).
+#### 4. Pod trusted truy cập DB (thành công).
+#### 5. Xác nhận log trong Grafana thể hiện rõ traffic bị chặn.
 
 ---
 
-## 🗂️ **Slide minh họa nên có**
-
-- Slide sơ đồ hệ thống và chính sách Calico.
-- Slide screenshot pod attacker bị chặn (`timeout`).
-- Slide screenshot Grafana log thể hiện attacker bị chặn.
-- Slide screenshot trusted client kết nối DB thành công.
-
----
 
 ## 📝 **Tại sao làm demo này? (Giải thích thêm)**
 
-- Chứng minh khả năng bảo vệ mạng nội bộ với Calico.
-- Minh họa mô hình Zero Trust.
-- Quan sát trực quan và log rõ ràng về các cuộc tấn công bị chặn.
+- *Chứng minh khả năng bảo vệ mạng nội bộ với Calico.*
+- *Minh họa mô hình Zero Trust.*
+- *Quan sát trực quan và log rõ ràng về các cuộc tấn công bị chặn.*
 
 ---
 
-Bạn đã hiểu rõ hơn kịch bản này chưa? Nếu còn bất cứ điểm nào chưa rõ hoặc muốn chỉnh sửa, mình sẽ tiếp tục giúp bạn nhé!
+# 📌 **Kịch bản số 2** 
+Mô tả: Đây sẽ là kịch bản demo về khả năng mã hóa của calico với WireGuard. Traffic giữa pod-to-pod sẽ được mã hóa ngăn chặn nghe lén và đảm bảo bảo mật dữ liệu
 
+🎯 Mục tiêu:
+- Minh họa rằng Calico có thể mã hóa tất cả lưu lượng giữa các node.
 
+- So sánh lưu lượng trước/sau khi bật mã hóa.
 
+- Dùng Wireshark hoặc tcpdump để chứng minh rằng lưu lượng đã được mã hóa (không đọc được nội dung).
+
+## Kiểm tra  môi trường hỗ trợ
+- *Kernel ≥ 5.6 (Ubuntu 20.04/22.04)*
+- *Calico >v3.13*
+- *CNI Calico đang chạy*
+
+## 🧪 Bước 1: Bật mã hóa WireGuard trong Calico
+⚙️ Cấu hình đơn giản bằng calicoctl
+```bash
+calicoctl patch felixconfiguration default --patch='{"spec": {"wireguardEnabled": true}}'
+```
+
+## 🔍 Bước 2: Kiểm tra trạng thái WireGuard
+```bash
+calicoctl get node -o wide
+```
+➡️ Sẽ có cột Wireguard Public Key hiển thị
+
+ssh vào node để kiểm tra: 
+```bash
+sudo wg show
+```
+➡️ Sẽ thấy các interface và peer mã hóa với wg0 hoặc wg.calico
+
+## 📦 Bước 3: Gửi lưu lượng giữa 2 pod trên 2 node khác nhau
+```bash
+kubectl exec -it pod-A -- curl pod-B
+```
+➡️ Đảm bảo 2 pod chạy trên 2 node khác nhau
+
+## 🕵️ Bước 4: Bắt gói tin và chứng minh đã mã hóa
+- SSH vào 1 node bất kỳ và dùng tcpdump:
+```bash
+sudo tcpdump -i <interface> port 51820
+```
+
+📌 51820 là cổng WireGuard mặc định
+- Nếu chưa bật WireGuard ➝ bạn sẽ thấy gói TCP thông thường
+- Nếu đã bật ➝ bạn sẽ chỉ thấy gói UDP mã hóa, không đọc được nội dung payload
+
+## 📈 Bước 5: Kết hợp giám sát
+- Trong Grafana: có thể giám sát lưu lượng outbound pod
+- Trong log: có thể log lại các kết nối giữa các node
 
 
 ## Kết luận
