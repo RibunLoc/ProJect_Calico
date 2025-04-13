@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-attacker-approve
+  namespace: production
+  labels:
+    role: trusted
+spec:
+  nodeSelector:
+    node: Node3
+  containers:
+  - name: attacker-approve
+    image: nicolaka/netshoot
+    command: ["/bin/sh", "-c"]
+    args:
+      - |
+        while true; do
+          echo "🚨 Simulating curl attack to app-secure $(date)" >&2;
+          curl -s http://app-secure.production.svc.cluster.local >/dev/null;
+          sleep 15;
+        done

@@ -7,7 +7,7 @@ data:
   config.yaml: |
     receivers:
       filelog:
-        include: [/var/log/pods/*/*/*.log]
+        include: [/var/log/containers/*.log] 
         start_at: beginning
 
       otlp:

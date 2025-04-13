@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: app-attacker
+  name: app-trusted
   namespace: production
   labels:
-    app: attacker
+    app: app-trusted
+    role: trusted
 spec:
   nodeSelector:
     node: Node3
@@ -20,6 +21,5 @@ spec:
 
           echo "🚨 Port scan (TCP connect) at $(date)" >&2;
           timeout 3 bash -c "</dev/tcp/postgres.production.svc.cluster.local/5432" 2>/dev/null && echo "✅ Port 5432 open" || echo "❌ Port 5432 closed"
-
           sleep 5;
         done

@@ -13,6 +13,8 @@ spec:
       labels:
         app: otel-collector
     spec:
+      nodeSelector:
+        collector-node: "true"
       containers:
       - name: otel-collector
         image: otel/opentelemetry-collector-contrib:latest
