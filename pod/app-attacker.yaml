@@ -15,17 +15,22 @@ spec:
     args:
       - |
         while true; do
-          echo "✅ [TRUSTED] Trying to connect to DB at $(date)" >&2;
-          
-          # Dùng timeout để kiểm soát lệnh không treo quá lâu
-          timeout 5s bash -c 'PGPASSWORD=demo123 psql -h postgres.production.svc.cluster.local -U demo -d demodb -c "SELECT now();"'
+          echo "🚨 Attempting to connect to DB at $(date)" >&2;
 
-          # Kiểm tra kết quả từ timeout
+          LOG_TIME=$(date)
+
+          timeout 5s bash -c "
+            PGPASSWORD=demodb psql -h postgres.production.svc.cluster.local -U app1 -d demodb \
+            -c \"INSERT INTO access_log_1(source_pod, action) VALUES ('app-attacker', 'Connected at ${LOG_TIME}');\"
+          "
+
           if [ $? -eq 0 ]; then
-            echo "✅ [TRUSTED] Connected to DB successfully at $(date)" >&2;
+            echo \"✅ INSERT log thành công vào DB\" >&2;
           else
-            echo "❌ [TRUSTED] FAILED to connect to DB (timeout or error) at $(date)" >&2;
+            echo \"❌ INSERT log thất bại hoặc bị chặn bởi policy\" >&2;
           fi
-          
+
           sleep 10;
         done
+
+
