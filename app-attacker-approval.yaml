@@ -1,21 +1,15 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: app-attacker-approve
-  namespace: production
-  labels:
-    role: trusted
+  name: netshoot-node
+  namespace: kube-system
 spec:
+  hostNetwork: true
   nodeSelector:
-    node: Node3
+    node: Node2
   containers:
-  - name: attacker-approve
+  - name: netshoot
     image: nicolaka/netshoot
-    command: ["/bin/sh", "-c"]
-    args:
-      - |
-        while true; do
-          echo "🚨 Simulating curl attack to app-secure $(date)" >&2;
-          curl -s http://app-secure.production.svc.cluster.local >/dev/null;
-          sleep 15;
-        done
+    securityContext:
+      privileged: true
+    command: ["sleep", "3600"]

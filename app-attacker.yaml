@@ -15,11 +15,17 @@ spec:
     args:
       - |
         while true; do
-          echo "🚨 Attempting to connect to DB at $(date)" >&2;
-          PGPASSWORD=demo123 psql -h postgres.production.svc.cluster.local -U demo -d demodb -c "SELECT now();" 2>&1;
+          echo "✅ [TRUSTED] Trying to connect to DB at $(date)" >&2;
+          
+          # Dùng timeout để kiểm soát lệnh không treo quá lâu
+          timeout 5s bash -c 'PGPASSWORD=demo123 psql -h postgres.production.svc.cluster.local -U demo -d demodb -c "SELECT now();"'
 
-          echo "🚨 Port scan (TCP connect) at $(date)" >&2;
-          timeout 3 bash -c "</dev/tcp/postgres.production.svc.cluster.local/5432" 2>/dev/null && echo "✅ Port 5432 open" || echo "❌ Port 5432 closed"
-
-          sleep 5;
+          # Kiểm tra kết quả từ timeout
+          if [ $? -eq 0 ]; then
+            echo "✅ [TRUSTED] Connected to DB successfully at $(date)" >&2;
+          else
+            echo "❌ [TRUSTED] FAILED to connect to DB (timeout or error) at $(date)" >&2;
+          fi
+          
+          sleep 10;
         done

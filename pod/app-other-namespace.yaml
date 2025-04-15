@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: external-tester
+  namespace: external
+  labels:
+    app: external-tester
+spec:
+  containers:
+  - name: tester
+    image: postgres:15-alpine
+    command: ["/bin/sh", "-c"]
+    args:
+      - |
+        while true; do
+          echo "🔍 [EXTERNAL] Trying to connect to DB at $(date)" >&2;
+          timeout 5s bash -c 'PGPASSWORD=demo123 psql -h postgres.production.svc.cluster.local -U demo -d demodb -c "SELECT now();"'
+          if [ $? -eq 0 ]; then
+            echo "✅ [EXTERNAL] SUCCESS: Connected to DB" >&2;
+          else
+            echo "❌ [EXTERNAL] FAILED to connect to DB" >&2;
+          fi
+          sleep 10;
+        done

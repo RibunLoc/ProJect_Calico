@@ -1,0 +1,14 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-same-namespace-only
+  namespace: production
+spec:
+  selector: app == 'db'
+  types:
+    - Ingress
+  ingress:
+    - action: Allow
+      source:
+        namespaceSelector: projectcalico.org/name == "production"
+
