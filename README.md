@@ -235,6 +235,7 @@ kubectl exec -it attacker -n networking-policy-demo -- wget http://app-secure:80
 
 
 ---
+<img src="./image/Topology.png" alt="topology" width="300"/>
 ---
 
 # 📌 **Kịch bản số 1**
