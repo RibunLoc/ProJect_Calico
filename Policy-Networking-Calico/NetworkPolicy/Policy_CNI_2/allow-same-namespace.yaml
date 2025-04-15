@@ -4,7 +4,6 @@ metadata:
   name: allow-same-namespace-only
   namespace: production
 spec:
-  
   selector: app == 'db'
   types:
     - Ingress
