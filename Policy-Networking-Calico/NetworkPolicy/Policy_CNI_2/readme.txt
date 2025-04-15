@@ -1,0 +1,1 @@
+Cho phép các pod nào có cùng tên namespace là production thì được phép kết nối tới cơ sở dữ liệu

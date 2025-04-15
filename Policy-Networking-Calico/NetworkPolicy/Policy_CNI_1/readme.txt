@@ -1,0 +1,1 @@
+Cho phép pod nào được gán nhán là role = trusted thì mới được kết nối tới cơ sở dữ liệu

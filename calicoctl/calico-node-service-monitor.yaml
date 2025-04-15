@@ -1,17 +1,17 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: calico-typha
+  name: calico-node
   namespace: monitoring
   labels:
     release: monitoring
 spec:
   selector:
     matchLabels:
-      k8s-app: calico-typha
+      k8s-app: calico-node
   namespaceSelector:
     matchNames:
       - calico-system
   endpoints:
-    - port: metrics
+    - port: metrics-port
       interval: 15s
