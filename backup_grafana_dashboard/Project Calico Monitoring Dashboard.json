@@ -18,13 +18,352 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 32,
+  "id": 29,
   "links": [],
   "panels": [
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
+      },
+      "description": "Mỗi Pod trong Kubernetes được gán một interface (veth) bởi Calico. Interface này được gọi là endpoint trong Calico.\n\nMỗi endpoint tương ứng với một Pod.\n\nfelix_active_local_endpoints = 5 nghĩa là trên node này đang có 5 interface (của 5 pod) đang được Calico Felix quản lý.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 16,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "felix_active_local_endpoints{instance=~\".*\"}",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Số lượng pod được quản lý bởi calico node",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
+      },
+      "description": "Nếu mọi node đều hiển thị số giống nhau, tức là Calico Felix đã đồng bộ đúng toàn bộ policy trong cluster.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
+          "editorMode": "code",
+          "expr": "felix_cluster_num_policies{instance=~\".*\"}",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Tổng số lượng policy hiện đang được Felix nhận từ datastore (etcd hoặc Kubernetes API)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false,
+            "minWidth": 50
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
+          "editorMode": "code",
+          "expr": "felix_route_table_num_routes",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Tổng route đang quản lý",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
+      },
+      "description": " Số lượng network policy Calico đang hoạt động trên một node cụ thể.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 15,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
+          "editorMode": "code",
+          "expr": "felix_active_local_policies{instance=~\".*\"}",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Số policy đang áp dụng cục bộ",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 4,
+        "y": 16
+      },
+      "id": 13,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
+          "editorMode": "code",
+          "expr": "sum(felix_iptables_rules{ip_version=\"4\"}) by (instance)",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Tổng số iptables rules được Felix cài đặt cho IPv4 trên node",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
       },
       "fieldConfig": {
         "defaults": {
@@ -81,12 +420,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 24
       },
-      "id": 7,
+      "id": 8,
       "options": {
         "legend": {
           "calcs": [],
@@ -103,28 +442,127 @@
       "pluginVersion": "11.6.0",
       "targets": [
         {
-          "direction": "backward",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
           "editorMode": "code",
-          "expr": "count_over_time({pod=\"external-tester\"} |= \"FAILED to connect\"[1m])",
-          "legendFormat": "Số gói thất bại",
-          "queryType": "range",
+          "expr": "sum(rate(wireguard_bytes_rcvd[1m]))",
+          "legendFormat": "Tổng lưu lượng nhận",
+          "range": true,
           "refId": "A"
         },
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
           },
-          "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({pod=\"external-tester\"} |= \"SUCCESS: Connected to DB\"[1m])",
+          "expr": "sum(rate(wireguard_bytes_sent[1m]))",
           "hide": false,
-          "legendFormat": "Số gói kết nối thành công",
-          "queryType": "range",
+          "instant": false,
+          "legendFormat": "Tổng lưu lượng gửi",
+          "range": true,
           "refId": "B"
         }
       ],
-      "title": "Externel test",
+      "title": "Tổng lưu lượng WireGuard",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ceiynibh49clce"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ceiynibh49clce"
+          },
+          "editorMode": "code",
+          "expr": "wireguard_meta{iface=\"wireguard.cali\"}",
+          "legendFormat": "{{iface}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Trạng thái interface WireGuard",
       "type": "timeseries"
     },
     {
@@ -184,13 +622,38 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "pod = app-attacker truy vấn"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 33
       },
       "id": 6,
       "options": {
@@ -211,8 +674,8 @@
         {
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({app=\"db\"} |= \"Connection matched\" [1m])",
-          "legendFormat": "New connection",
+          "expr": "count_over_time({app=\"db\"} |= \"INSERT INTO access_log_1\" [1m])",
+          "legendFormat": "pod = app-attacker truy vấn",
           "queryType": "range",
           "refId": "A"
         },
@@ -223,9 +686,9 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({app=\"db\"} |= \"wronguser\" [1m])",
+          "expr": "count_over_time({app=\"db\"} |= \"INSERT INTO access_log_2\" [1m])",
           "hide": false,
-          "legendFormat": "wrong user",
+          "legendFormat": "pod = app-trusted truy vấn",
           "queryType": "range",
           "refId": "B"
         },
@@ -236,9 +699,9 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({app=\"db\"} |= \"authentication failed\" [1m])",
-          "hide": true,
-          "legendFormat": "authentication failed",
+          "expr": "count_over_time({app=\"db\"} |= \"INSERT INTO access_log_3\" [1m])",
+          "hide": false,
+          "legendFormat": "pod = external-tester truy vấn",
           "queryType": "range",
           "refId": "C"
         }
@@ -308,8 +771,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 16
+        "x": 12,
+        "y": 33
       },
       "id": 5,
       "options": {
@@ -330,7 +793,7 @@
         {
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({pod=\"app-attacker\"} |= \"Connected to DB successfully\" [1m])",
+          "expr": "count_over_time({pod=\"app-attacker\"} |= \"log thành công vào DB\" [1m])",
           "legendFormat": "Số lượng truy vấn thành công",
           "queryType": "range",
           "refId": "A"
@@ -342,7 +805,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({pod=\"app-attacker\"} |= \"FAILED to connect to DB\" [1m])",
+          "expr": "count_over_time({pod=\"app-attacker\"} |= \"log thất bại hoặc bị chặn bởi policy\" [1m])",
           "hide": false,
           "legendFormat": "Số lượng truy vấn không thành công",
           "queryType": "range",
@@ -356,7 +819,7 @@
           "direction": "backward",
           "editorMode": "code",
           "expr": "count_over_time({pod=\"app-attacker\"} |= \"Port scan attempt\" [1m])",
-          "hide": false,
+          "hide": true,
           "legendFormat": "Port scan",
           "queryType": "range",
           "refId": "C"
@@ -369,13 +832,13 @@
           "direction": "backward",
           "editorMode": "code",
           "expr": "count_over_time({pod=\"app-attacker\"} |= \"Port 5432 closed\" [1m])",
-          "hide": false,
+          "hide": true,
           "legendFormat": "Số lần port bị chặn",
           "queryType": "range",
           "refId": "D"
         }
       ],
-      "title": "App attacker truy cập đến database",
+      "title": "pod = app attacker truy cập đến database",
       "type": "timeseries"
     },
     {
@@ -457,7 +920,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 41
       },
       "id": 4,
       "options": {
@@ -478,7 +941,7 @@
         {
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({pod=\"app-trusted\"} |= \"Connected to DB successfully\" [1m])",
+          "expr": "count_over_time({pod=\"app-trusted\"} |= \"INSERT log thành công vào DB\" [1m])",
           "legendFormat": "Số lượng truy vấn thành công",
           "queryType": "range",
           "refId": "A",
@@ -491,7 +954,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "count_over_time({pod=\"app-trusted\"} |= \"FAILED to connect to DB\" [1m])",
+          "expr": "count_over_time({pod=\"app-trusted\"} |= \"INSERT log thất bại hoặc bị chặn bởi policy\" [1m])",
           "hide": false,
           "legendFormat": "Số lượng truy vấn không thành công",
           "queryType": "range",
@@ -524,14 +987,15 @@
           "refId": "D"
         }
       ],
-      "title": "App trusted truy cập đến Database",
+      "title": "pod = app-trusted có label là role = trusted -> pod database",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "loki",
-        "uid": "-- Grafana --"
+        "uid": "P8E80F9AEF21F6940"
       },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -576,162 +1040,27 @@
             "steps": [
               {
                 "color": "green"
-              }
-            ]
-          },
-          "unit": "req/min"
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "A-series"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
+              },
               {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
+                "color": "red",
+                "value": 80
               }
             ]
           }
-        ]
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 32
+        "w": 12,
+        "x": 12,
+        "y": 41
       },
-      "id": 1,
+      "id": 7,
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "sortBy": "Name",
-          "sortDesc": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "expr": "count_over_time({pod=\"app-attacker\"} |= \"Attempting to connect to DB\" [1m])",
-          "refId": "A"
-        }
-      ],
-      "title": "Log tấn công DB từ app-attacker",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "-- Grafana --"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red"
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "B-series"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 40
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
+          "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
@@ -744,49 +1073,29 @@
       "pluginVersion": "11.6.0",
       "targets": [
         {
-          "expr": "count_over_time({pod=\"app-attacker\"} |= \"connection to server\" |= \"timed out\" [1m])",
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count_over_time({pod=\"external-tester\"} |= \"INSERT log thành công vào DB\"[1m])",
+          "legendFormat": "Số lượng truy vấn thành công",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count_over_time({pod=\"external-tester\"} |= \"INSERT log thất bại hoặc bị chặn bởi policy\"[1m])",
+          "hide": false,
+          "legendFormat": "Số lượng truy vấn thất bại",
+          "queryType": "range",
           "refId": "B"
         }
       ],
-      "title": "Số lần bị chặn (connection timed out)",
+      "title": "pod = Externel test -> pod = Database",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "-- Grafana --"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 48
-      },
-      "id": 3,
-      "options": {
-        "dedupStrategy": "none",
-        "enableInfiniteScrolling": false,
-        "enableLogDetails": true,
-        "prettifyLogMessage": false,
-        "showCommonLabels": false,
-        "showLabels": true,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "expr": "{pod=\"app-attacker\"}",
-          "refId": "C"
-        }
-      ],
-      "title": "Chi tiết log app-attacker",
-      "type": "logs"
     }
   ],
   "preload": false,
@@ -808,5 +1117,5 @@
   "timezone": "browser",
   "title": "Project Calico Monitoring Dashboard",
   "uid": "Trusted-monitor",
-  "version": 21
+  "version": 57
 }

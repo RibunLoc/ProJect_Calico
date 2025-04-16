@@ -30,7 +30,7 @@ spec:
             echo \"❌ INSERT log thất bại hoặc bị chặn bởi policy\" >&2;
           fi
 
-          sleep 10;
+          sleep 2;
         done
 
 

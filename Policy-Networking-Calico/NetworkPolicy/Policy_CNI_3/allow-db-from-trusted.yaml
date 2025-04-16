@@ -1,0 +1,13 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-db-from-trusted
+spec:
+  order: 100.0
+  selector: app == 'db'
+  ingress:
+    - action: Allow
+      source:
+        selector: role == 'trusted'
+  types:
+    - Ingress

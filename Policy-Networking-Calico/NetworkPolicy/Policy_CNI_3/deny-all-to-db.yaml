@@ -1,11 +1,13 @@
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
-  name: deny-all-to-db
+  name: deny-attacker-to-db
 spec:
-  order: 200.0
+  order: 50.0
   selector: app == 'db'
   ingress:
     - action: Deny
+      source:
+        selector: app == 'attacker'
   types:
     - Ingress
